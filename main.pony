@@ -6,6 +6,7 @@ use "time"
 // TODO - learn how to do promise.FulfillIdentity so we can have a synchronous retrieve? -- needed for functional test
 // TODO - borrow Histogram from Wallaroo for characterization of response times
 // TODO - use TestList/TestHelper to generate unit tests
+// TODO - retrieve should return a Result(Ok,Err). It simply doesn't call its promise at the moment.
 
 type Keytype is String
 type Valtype is String
@@ -167,9 +168,13 @@ actor Main
     _store.put_ttl("test8", "baz", 8)
     _store.put_ttl("test9", "bam", 9)
 
-    timeget("test1")
-    timeget("test2")
-    timeget("test3")
+    var n : U32 = 10
+    while n > 0 do
+        timeget("test1")
+        timeget("test2")
+        timeget("test3")
+        n = n - 1
+    end
 
   fun timeget(key: String) =>
     let promise = Promise[Valtype]
