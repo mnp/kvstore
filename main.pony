@@ -7,6 +7,7 @@ use "time"
 // TODO - borrow Histogram from Wallaroo for characterization of response times
 // TODO - use TestList/TestHelper to generate unit tests
 // TODO - retrieve should return a Result(Ok,Err). It simply doesn't call its promise at the moment.
+// BUG  - reaper should loop until no more values are present older than now().
 
 type Keytype is String
 type Valtype is String

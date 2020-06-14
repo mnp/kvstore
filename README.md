@@ -1,25 +1,25 @@
 # Key/Value Store - Design Exercise
 
+**NOOB WARNING:** Starting to learn Pony, don't look!
+
 ## Primary Structures
 
-Given limited implementation time, existing components are desired where possible.
-
-The main idea is a worker thread to handle the TTL expirations and another from each caller.
+We select structures to store keys and values, one to store TTLs, and a worker actor to clean the expired keys.
 
 ### Keys
 
 We need a constant time lookup so a hash table is the obvious choice. Since we've kindly been given a constraint of 10 million pairs, we also want to find
 an implementation which includes a preallocation option to avoid a resize penalty.
 
-### Data
+### TTL -> Key priority queue
 
-? can we assume bounded size data? is it small enough to preallocate all data items?
-
-### Expirations
-
-1. Create a min-priority queue to hold TTLs, which can handle multiple entries at the same time slot
+1. Create a min-priority queue (binary heap) to hold TTLs, which can handle multiple entries at the same time slot
 2. kv PUTs with a TTL specified get inserted into the queue at their expiration time, while PUTs without a TTL are not inserted.
 3. Worker thread runs at 1/f and does a DELETE on key in that TTL time slot
+
+### Worker Actor
+
+Worker fires on a timer callback and compares current time to smallest in min heap, if found it remoeves from the hash.
 
 ### Verification
 
@@ -33,7 +33,12 @@ test driver should keep a histogram of percentile response times
 # Implementation selection
 
 ## Tradeoffs
-bounded time to research and implement vs target call performance
+
+* Bounded time to research and implement vs target call performance
+* Simplicity of implementation vs performance
+* Integrity safety vs performance
+* Memory vs performance (eg preallocate)
+* Education time on environment
 
 ## Jvm
 
