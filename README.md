@@ -2,6 +2,11 @@
 
 **NOOB WARNING:** Starting to learn Pony, don't look!
 
+
+## Problem and Assumptions
+
+Stated elswhere.
+
 ## Primary Structures
 
 We select structures to store keys and values, one to store TTLs, and a worker actor to clean the expired keys.
@@ -12,6 +17,9 @@ We need a constant time lookup so a hash table is the obvious choice. Since we'v
 an implementation which includes a preallocation option to avoid a resize penalty.
 
 ### TTL -> Key priority queue
+
+There's a neat structure called a [hierarchical timing wheel](http://www.cs.columbia.edu/~nahum/w6998/papers/sosp87-timing-wheels.pdf)
+specially suited for this task. Having no implementations of that in hand, a more general purpose structure is indicated.
 
 1. Create a min-priority queue (binary heap) to hold TTLs, which can handle multiple entries at the same time slot
 2. kv PUTs with a TTL specified get inserted into the queue at their expiration time, while PUTs without a TTL are not inserted.
